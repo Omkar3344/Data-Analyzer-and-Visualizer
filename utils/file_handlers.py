@@ -121,13 +121,19 @@ def convert_df_to_excel_download_link(df):
     href : str
         HTML link for downloading the data as Excel
     """
-    output = io.BytesIO()  # Changed from BytesIO() to io.BytesIO()
-    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-        df.to_excel(writer, index=False, sheet_name='Data')
-    excel_data = output.getvalue()
-    b64 = base64.b64encode(excel_data).decode()
-    href = f'<a href="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,{b64}" download="data_export.xlsx" class="download-link">📊 Download Excel File</a>'
-    return href
+    try:
+        # Try using xlsxwriter engine
+        output = io.BytesIO()
+        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+            df.to_excel(writer, index=False, sheet_name='Data')
+        excel_data = output.getvalue()
+        b64 = base64.b64encode(excel_data).decode()
+        href = f'<a href="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,{b64}" download="data_export.xlsx" class="download-link">📊 Download Excel File</a>'
+        return href
+    except ImportError:
+        # Fallback message if xlsxwriter not installed
+        href = '<span class="download-link" style="opacity: 0.6; cursor: not-allowed;">📊 Excel Download (Requires xlsxwriter package)</span>'
+        return href
 
 def convert_df_to_json_download_link(df):
     """

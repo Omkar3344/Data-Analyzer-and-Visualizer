@@ -281,9 +281,14 @@ with st.sidebar:
         if original_format != 'csv':
             st.markdown(convert_df_to_csv_download_link(st.session_state.data), unsafe_allow_html=True)
         
-        if original_format != 'xlsx' and original_format != 'xls':
-            st.markdown(convert_df_to_excel_download_link(st.session_state.data), unsafe_allow_html=True)
-        
+        try:
+            import xlsxwriter
+            if original_format != 'xlsx' and original_format != 'xls':
+                st.markdown(convert_df_to_excel_download_link(st.session_state.data), unsafe_allow_html=True)
+        except ImportError:
+            if original_format != 'xlsx' and original_format != 'xls':
+                st.info("Excel download option requires the xlsxwriter package.")
+
         if original_format != 'json':
             st.markdown(convert_df_to_json_download_link(st.session_state.data), unsafe_allow_html=True)
         
