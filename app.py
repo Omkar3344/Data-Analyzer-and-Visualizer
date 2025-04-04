@@ -34,6 +34,18 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# Hide Streamlit menu and footer (AFTER set_page_config)
+hide_streamlit_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            .stDeployButton {display:none;}
+            div.block-container {padding-top:1rem;}
+            </style>
+            """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
 # Custom CSS
 st.markdown("""
 <style>
